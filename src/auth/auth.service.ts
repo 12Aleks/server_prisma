@@ -5,6 +5,8 @@ import {comparePassword} from "../utils/bcrypt";
 import {JwtService} from "@nestjs/jwt";
 import * as process from "process";
 
+
+const EXPIRE_TIME = 20 * 1000;
 @Injectable()
 export class AuthService {
     constructor(private readonly userService: UserService,
@@ -32,7 +34,11 @@ export class AuthService {
                 refreshToken: await this.jwtService.signAsync(payload, {
                     expiresIn: '7d',
                     secret: process.env.JWT_SECRET_REFRESH_KEY,
-                })
+                }),
+
+
+                // for update accessToken time token
+                expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
             }
         }
 
@@ -66,7 +72,9 @@ export class AuthService {
             refreshToken: await this.jwtService.signAsync(payload, {
                 expiresIn: '7d',
                 secret: process.env.JWT_SECRET_REFRESH_KEY,
-            })
+            }),
+            // for update accessToken time token
+            expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME)
         }
     }
 
